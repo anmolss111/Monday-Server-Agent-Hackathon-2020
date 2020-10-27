@@ -150,6 +150,7 @@ class App extends React.Component {
               tableRender[tableIndex].columns = columns;
           });
 
+          console.log(tableRender)
           this.setState({ tableRender: tableRender })
       });
   }
@@ -166,7 +167,7 @@ class App extends React.Component {
                                         <Table striped bordered hover variant="dark">
                                             <thead>
                                                 <tr className="text-center">
-                                                    <th style={{color: '#007bff'}}>{table.name}</th>
+                                                    <th style={{color: '#dc3545'}}>{table.name}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -188,7 +189,7 @@ class App extends React.Component {
                                                                             {
                                                                                 (tableColumn.type == 'Foreign') ?
                                                                                 (
-                                                                                    <b style={{color: '#007bff'}}>{this.state.tableRender[tableColumn.forgienKeyTable].name + '_ID'}</b>
+                                                                                    <b style={{color: '#dc3545'}}>{this.state.tableRender[tableColumn.forgienKeyTable].name + '_ID'}</b>
                                                                                 )
                                                                                 :
                                                                                 (
