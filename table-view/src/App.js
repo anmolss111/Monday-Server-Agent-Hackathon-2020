@@ -32,46 +32,53 @@ class App extends React.Component {
 
 	const boardIds = context.boardIds || [context.boardId];
 	// const boardIds = [790136548]
-	monday
-	  .api(`query { boards(ids:[${boardIds}]) { id, items { id, column_values { id, value } } }}`)
-	  .then((res) => {
-		  console.log(res)
 
-		  var tablesData = [];
-		  var allItemIds = [];
-		  res.data.boards[0].items.forEach((item, item_index) => {
+	this.getData(boardIds)
 
-			  console.log(item.id)
-
-			  allItemIds.push(item.id);
-
-			  var tableColumnItemIds = [];
-			  item.column_values.forEach((column_value, column_index) => {
-
-				  if(column_value.id == 'subitems' && column_value.value != null){
-
-					  let linkedPulseIds = JSON.parse(column_value.value);
-
-					  console.log(linkedPulseIds);
-
-					  linkedPulseIds.linkedPulseIds.forEach((linkedPulseIdsItem, linkedPulseIdsIndex) => {
-
-						  tableColumnItemIds.push(String(linkedPulseIdsItem.linkedPulseId))
-						  allItemIds.push(String(linkedPulseIdsItem.linkedPulseId));
-					  });
-				  }
-			  })
-
-			  tablesData.push({
-
-				  tableItemId: item.id,
-				  tableColumnItemIds: tableColumnItemIds
-			  });
-		  });
-
-		  this.getTableData(tablesData, allItemIds);
-	  });
   };
+
+  getData(boardIds){
+
+	  monday
+		.api(`query { boards(ids:[${boardIds}]) { id, items { id, column_values { id, value } } }}`)
+		.then((res) => {
+			console.log(res)
+
+			var tablesData = [];
+			var allItemIds = [];
+			res.data.boards[0].items.forEach((item, item_index) => {
+
+				console.log(item.id)
+
+				allItemIds.push(item.id);
+
+				var tableColumnItemIds = [];
+				item.column_values.forEach((column_value, column_index) => {
+
+					if(column_value.id == 'subitems' && column_value.value != null){
+
+						let linkedPulseIds = JSON.parse(column_value.value);
+
+						console.log(linkedPulseIds);
+
+						linkedPulseIds.linkedPulseIds.forEach((linkedPulseIdsItem, linkedPulseIdsIndex) => {
+
+							tableColumnItemIds.push(String(linkedPulseIdsItem.linkedPulseId))
+							allItemIds.push(String(linkedPulseIdsItem.linkedPulseId));
+						});
+					}
+				})
+
+				tablesData.push({
+
+					tableItemId: item.id,
+					tableColumnItemIds: tableColumnItemIds
+				});
+			});
+
+			this.getTableData(tablesData, allItemIds);
+		});
+  }
 
   getTableData(tablesData, allItemIds){
 
