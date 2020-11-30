@@ -1,0 +1,12 @@
+users/sub_component_1/users/create
+users/sub_component_1/users/read
+users/sub_component_1/users/update
+users/sub_component_1/users/delete
+users/sub_component_1/table3/create
+users/sub_component_1/table3/read
+users/sub_component_1/table3/update
+users/sub_component_1/table3/delete
+users/sub_component_2/table4/create
+users/sub_component_2/table4/read
+users/sub_component_2/table4/update
+users/sub_component_2/table4/delete

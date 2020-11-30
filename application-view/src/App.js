@@ -4,7 +4,9 @@ import mondaySdk from "monday-sdk-js";
 import Container from "react-bootstrap/Container";
 import Row from  "react-bootstrap/Row";
 import Col from  "react-bootstrap/Col";
-import Table from 'react-bootstrap/Table'
+import Table from 'react-bootstrap/Table';
+import Button from 'react-bootstrap/Button';
+import Spinner from 'react-bootstrap/Spinner';
 
 const monday = mondaySdk();
 
@@ -18,7 +20,8 @@ class App extends React.Component {
 			allItemIds: [],
 			componentMap: {},
 			tableRender: [],
-			modulesMap: {}
+			modulesMap: {},
+			loader: true
 		};
 	}
 
@@ -58,7 +61,7 @@ class App extends React.Component {
 						let linkedPulseIds = JSON.parse(column_value.value);
 						console.log(linkedPulseIds, boardIdForTable)
 
-						if(linkedPulseIds != undefined){
+						if(linkedPulseIds != undefined && linkedPulseIds.linkedPulseIds != undefined){
 
 							linkedPulseIds.linkedPulseIds.forEach((linkedPulseId, i) => {
 
@@ -251,48 +254,80 @@ class App extends React.Component {
 
 			console.log(modulesMap)
 			this.setState({modulesMap: modulesMap});
+			this.setState({loader: false})
 		});
+	}
+
+	build(){
+
+		console.log(this.state.modulesMap, this.state.tableRender)
+
+		const requestOptions = {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ modulesMap: this.state.modulesMap, tableRender: this.state.tableRender })
+		};
+		fetch('http://localhost:8000/common/service', requestOptions)
+			.then(response => response.json())
+			.then(data => {
+
+				console.log(data);
+
+				window.open('http://localhost:8000/static/' + data.build);
+			});
 	}
 
   render() {
 		return (
 			<div className="App">
 				<Container fluid>
-					<Row>
-					{Object.keys(this.state.modulesMap).map((module, index) => (
-						<Col sm={6} key={index}>
-							<Row>
-								<Col sm={12}>
-									<Table striped bordered hover variant="dark">
-										<thead>
-											<tr className="text-center">
-												<th style={{color: '#dc3545'}}>{module}</th>
-											</tr>
-										</thead>
-										<tbody>
-											{this.state.modulesMap[module].map((component, index) => (
-												<tr key={index}>
-													<td>
-														<Container >
-															<Row>
-																<Col sm={4} style={{color: '#007bff', paddingTop: 10, paddingBottom: 10}}>
-																	<b>{component.name}</b>
-																</Col>
-																<Col sm={8} style={{color: '#ffc107', paddingTop: 10, paddingBottom: 10}}>
-																	<b>{component.tables}</b>
-																</Col>
-															</Row>
-														</Container>
-													</td>
-												</tr>
-											))}
-										</tbody>
-									</Table>
+					{
+						(this.state.loader) ?
+						<Row>
+							<Col sm={12} className="text-center">
+								<Spinner animation="grow" />
+							</Col>
+						</Row>
+						:
+						<Row>
+							{Object.keys(this.state.modulesMap).map((module, index) => (
+								<Col sm={6} key={index}>
+									<Row>
+										<Col sm={12}>
+											<Table striped bordered hover variant="dark">
+												<thead>
+													<tr className="text-center">
+														<th style={{color: '#dc3545'}}>{module}</th>
+													</tr>
+												</thead>
+												<tbody>
+													{this.state.modulesMap[module].map((component, index) => (
+														<tr key={index}>
+															<td>
+																<Container >
+																	<Row>
+																		<Col sm={4} style={{color: '#007bff', paddingTop: 10, paddingBottom: 10}}>
+																			<b>{component.name}</b>
+																		</Col>
+																		<Col sm={8} style={{color: '#ffc107', paddingTop: 10, paddingBottom: 10}}>
+																			<b>{component.tables}</b>
+																		</Col>
+																	</Row>
+																</Container>
+															</td>
+														</tr>
+													))}
+												</tbody>
+											</Table>
+										</Col>
+									</Row>
 								</Col>
-							</Row>
-						</Col>
-					))}
-					</Row>
+							))}
+							<Col sm={12} style={{textAlign:'right', paddingTop: 10, paddingBottom: 10}}>
+								<Button variant="success" onClick={e => this.build()}>Build</Button>
+							</Col>
+						</Row>
+					}
 				</Container>
 			</div>
 		);

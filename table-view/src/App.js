@@ -4,7 +4,8 @@ import mondaySdk from "monday-sdk-js";
 import Container from "react-bootstrap/Container";
 import Row from  "react-bootstrap/Row";
 import Col from  "react-bootstrap/Col";
-import Table from 'react-bootstrap/Table'
+import Table from 'react-bootstrap/Table';
+import Spinner from 'react-bootstrap/Spinner';
 
 const monday = mondaySdk();
 
@@ -15,7 +16,8 @@ class App extends React.Component {
 	// Default state
 	this.state = {
 	  settings: {},
-	  tableRender: []
+	  tableRender: [],
+	  loader: true
 	};
   }
 
@@ -159,6 +161,7 @@ class App extends React.Component {
 
 		  console.log(tableRender)
 		  this.setState({ tableRender: tableRender })
+		  this.setState({loader: false})
 	  });
   }
 
@@ -166,57 +169,66 @@ class App extends React.Component {
 		return (
 			<div className="App">
 				<Container fluid>
-					<Row>
-						{this.state.tableRender.map((table, index) => (
-							<Col sm={4} key={index}>
-								<Row>
-									<Col sm={12}>
-										<Table striped bordered hover variant="dark">
-											<thead>
-												<tr className="text-center">
-													<th style={{color: '#dc3545'}}>{table.name}</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>
-														<Container >
-															<Row>
-																<Col sm={4} style={{color: '#007bff', paddingTop: 10, paddingBottom: 10}}>
-																	<b>{table.name + '_ID'}</b>
-																	<br />
-																	<span style={{color: 'green'}}>Integer</span>
-																</Col>
-																{
-																	table.columns.map((tableColumn, tableIndex) => (
-
-																		<Col sm={4} key={tableIndex} style={{paddingTop: 10, paddingBottom: 10}}>
-																			<b style={{color: '#ffc107'}}>{tableColumn.name}</b>
-																			<br />
-																			{
-																				(tableColumn.type == 'Foreign') ?
-																				(
-																					<b style={{color: '#dc3545'}}>{this.state.tableRender[tableColumn.forgienKeyTable].name + '_ID'}</b>
-																				)
-																				:
-																				(
-																					<span style={{color: 'green'}}>{tableColumn.type}</span>
-																				)
-																			}
-																		</Col>
-																	))
-																}
-															</Row>
-														</Container>
-													</td>
-												</tr>
-											</tbody>
-										</Table>
-									</Col>
-								</Row>
+					{
+						(this.state.loader) ?
+						<Row>
+							<Col sm={12} className="text-center">
+								<Spinner animation="grow" />
 							</Col>
-						))}
-					</Row>
+						</Row>
+						:
+						<Row>
+							{this.state.tableRender.map((table, index) => (
+								<Col sm={4} key={index}>
+									<Row>
+										<Col sm={12}>
+											<Table striped bordered hover variant="dark">
+												<thead>
+													<tr className="text-center">
+														<th style={{color: '#dc3545'}}>{table.name}</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>
+															<Container >
+																<Row>
+																	<Col sm={4} style={{color: '#007bff', paddingTop: 10, paddingBottom: 10}}>
+																		<b>{table.name + '_ID'}</b>
+																		<br />
+																		<span style={{color: 'green'}}>Integer</span>
+																	</Col>
+																	{
+																		table.columns.map((tableColumn, tableIndex) => (
+
+																			<Col sm={4} key={tableIndex} style={{paddingTop: 10, paddingBottom: 10}}>
+																				<b style={{color: '#ffc107'}}>{tableColumn.name}</b>
+																				<br />
+																				{
+																					(tableColumn.type == 'Foreign') ?
+																					(
+																						<b style={{color: '#dc3545'}}>{this.state.tableRender[tableColumn.forgienKeyTable].name + '_ID'}</b>
+																					)
+																					:
+																					(
+																						<span style={{color: 'green'}}>{tableColumn.type}</span>
+																					)
+																				}
+																			</Col>
+																		))
+																	}
+																</Row>
+															</Container>
+														</td>
+													</tr>
+												</tbody>
+											</Table>
+										</Col>
+									</Row>
+								</Col>
+							))}
+						</Row>
+					}
 				</Container>
 			</div>
 		);
