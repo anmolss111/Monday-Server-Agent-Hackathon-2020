@@ -4,7 +4,7 @@ All developers has to write a lot of code when developing the backend of the app
 ## Demo
 Youtube: https://youtu.be/wBM2mJnIkMA
 
-[![IMAGE ALT TEXT](http://img.youtube.com/vi/J__W6lRfKM0/0.jpg)](http://www.youtube.com/watch?v=wBM2mJnIkMA "Video Title")
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/wBM2mJnIkMA/0.jpg)](http://www.youtube.com/watch?v=wBM2mJnIkMA "Video Title")
 
 ## Setup
 Install python3, npm, ng cli, Dango, Django CORS, Django Rest framework 
