@@ -260,6 +260,8 @@ class App extends React.Component {
 
 	build(){
 
+		this.setState({loader: true})
+
 		console.log(this.state.modulesMap, this.state.tableRender)
 
 		const requestOptions = {
@@ -267,13 +269,14 @@ class App extends React.Component {
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ modulesMap: this.state.modulesMap, tableRender: this.state.tableRender })
 		};
-		fetch('http://localhost:8000/common/service', requestOptions)
+		fetch('https://nobrainer.in/common/service', requestOptions)
 			.then(response => response.json())
 			.then(data => {
 
 				console.log(data);
+				this.setState({loader: false})
 
-				window.open('http://localhost:8000/static/' + data.build);
+				window.open('https://nobrainer.in/static/' + data.build);
 			});
 	}
 
