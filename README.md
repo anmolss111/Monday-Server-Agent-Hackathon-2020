@@ -7,7 +7,7 @@ Youtube: https://youtu.be/wBM2mJnIkMA
 [![IMAGE ALT TEXT](http://img.youtube.com/vi/wBM2mJnIkMA/0.jpg)](http://www.youtube.com/watch?v=wBM2mJnIkMA "Video Title")
 
 ## Setup
-Install python3, npm, ng cli, Dango, Django CORS, Django Rest framework 
+Install python3, npm, Dango, Django CORS, Django Rest framework 
 
 Clone the Repo
 
